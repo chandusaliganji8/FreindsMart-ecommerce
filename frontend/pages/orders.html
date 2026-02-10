@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order History</title>
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a class="logo" href="/frontend/index.html">FriendSmart</a>
+        <div class="nav-links" id="authLinks"></div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>My Orders</h1>
+      <div id="status"></div>
+      <div id="orders"></div>
+    </main>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/common.js"></script>
+    <script>
+      const statusBox = document.getElementById('status');
+      const ordersBox = document.getElementById('orders');
+
+      const loadOrders = async () => {
+        try {
+          const orders = await apiFetch('/orders');
+
+          if (!orders.length) {
+            ordersBox.innerHTML = '<p>No orders yet.</p>';
+            return;
+          }
+
+          ordersBox.innerHTML = orders
+            .map(
+              (order) => `
+              <div class="card" style="margin-bottom:12px">
+                <div class="card-content">
+                  <h3>Order ID: ${order._id}</h3>
+                  <p><strong>Status:</strong> ${order.status}</p>
+                  <p><strong>Total:</strong> ₹${order.totalAmount}</p>
+                  <p><strong>Items:</strong> ${order.items.map((i) => `${i.name} x ${i.quantity}`).join(', ')}</p>
+                </div>
+              </div>
+            `
+            )
+            .join('');
+        } catch (error) {
+          showMessage(statusBox, `${error.message}. Please login first.`, 'error');
+        }
+      };
+
+      loadOrders();
+    </script>
+  </body>
+</html>

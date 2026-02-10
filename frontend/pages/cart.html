@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Cart</title>
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a class="logo" href="/frontend/index.html">FriendSmart</a>
+        <div class="nav-links" id="authLinks"></div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>My Cart</h1>
+      <div id="status"></div>
+      <div id="cartItems"></div>
+      <br />
+      <a href="/frontend/pages/checkout.html" class="btn">Proceed to Checkout</a>
+    </main>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/common.js"></script>
+    <script>
+      const statusBox = document.getElementById('status');
+      const cartItems = document.getElementById('cartItems');
+
+      const loadCart = async () => {
+        try {
+          const cart = await apiFetch('/cart');
+
+          if (!cart.items.length) {
+            cartItems.innerHTML = '<p>Your cart is empty.</p>';
+            return;
+          }
+
+          cartItems.innerHTML = `
+            <table class="table">
+              <thead>
+                <tr><th>Product</th><th>Qty</th><th>Price</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                ${cart.items
+                  .map(
+                    (item) => `
+                      <tr>
+                        <td>${item.product.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₹${item.product.price * item.quantity}</td>
+                        <td><button class="danger" onclick="removeItem('${item.product._id}')">Remove</button></td>
+                      </tr>
+                    `
+                  )
+                  .join('')}
+              </tbody>
+            </table>
+          `;
+        } catch (error) {
+          showMessage(statusBox, `${error.message}. Please login to view cart.`, 'error');
+        }
+      };
+
+      const removeItem = async (productId) => {
+        try {
+          await apiFetch(`/cart/remove/${productId}`, { method: 'DELETE' });
+          loadCart();
+        } catch (error) {
+          showMessage(statusBox, error.message, 'error');
+        }
+      };
+
+      loadCart();
+    </script>
+  </body>
+</html>

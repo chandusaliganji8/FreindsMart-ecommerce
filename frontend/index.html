@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FriendSmart Store</title>
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a class="logo" href="/frontend/index.html">FriendSmart</a>
+        <div class="nav-links" id="authLinks"></div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Products</h1>
+      <div id="status"></div>
+      <div id="products" class="grid"></div>
+    </main>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/common.js"></script>
+    <script>
+      const productsContainer = document.getElementById('products');
+      const statusBox = document.getElementById('status');
+
+      const renderProducts = async () => {
+        try {
+          const products = await apiFetch('/products');
+          productsContainer.innerHTML = products
+            .map(
+              (p) => `
+            <article class="card">
+              <img src="${p.imageUrl}" alt="${p.name}" />
+              <div class="card-content">
+                <h3>${p.name}</h3>
+                <p>₹${p.price}</p>
+                <a class="btn secondary" href="/frontend/pages/product.html?id=${p._id}">View Details</a>
+              </div>
+            </article>
+          `
+            )
+            .join('');
+        } catch (error) {
+          showMessage(statusBox, error.message, 'error');
+        }
+      };
+
+      renderProducts();
+    </script>
+  </body>
+</html>
