@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details</title>
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a class="logo" href="/frontend/index.html">FriendSmart</a>
+        <div class="nav-links" id="authLinks"></div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div id="status"></div>
+      <div id="productDetails"></div>
+    </main>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/common.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const statusBox = document.getElementById('status');
+      const productDetails = document.getElementById('productDetails');
+
+      const loadProduct = async () => {
+        try {
+          const product = await apiFetch(`/products/${id}`);
+          productDetails.innerHTML = `
+            <article class="card">
+              <img src="${product.imageUrl}" alt="${product.name}" style="max-height:320px" />
+              <div class="card-content">
+                <h1>${product.name}</h1>
+                <p><strong>Price:</strong> ₹${product.price}</p>
+                <p>${product.description}</p>
+                <p><strong>Category:</strong> ${product.category}</p>
+                <p><strong>Stock:</strong> ${product.stock}</p>
+                <button id="addToCartBtn">Add to Cart</button>
+              </div>
+            </article>
+          `;
+
+          document.getElementById('addToCartBtn').addEventListener('click', async () => {
+            try {
+              await apiFetch('/cart/add', {
+                method: 'POST',
+                body: JSON.stringify({ productId: product._id, quantity: 1 }),
+              });
+              showMessage(statusBox, 'Product added to cart');
+            } catch (error) {
+              showMessage(statusBox, `${error.message}. Please login first.`, 'error');
+            }
+          });
+        } catch (error) {
+          showMessage(statusBox, error.message, 'error');
+        }
+      };
+
+      if (!id) {
+        showMessage(statusBox, 'Product ID missing in URL', 'error');
+      } else {
+        loadProduct();
+      }
+    </script>
+  </body>
+</html>

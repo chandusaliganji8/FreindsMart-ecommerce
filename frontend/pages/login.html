@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a class="logo" href="/frontend/index.html">FriendSmart</a>
+        <div class="nav-links" id="authLinks"></div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Login</h1>
+      <div id="status"></div>
+      <form id="loginForm">
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+    </main>
+
+    <script src="/frontend/js/api.js"></script>
+    <script src="/frontend/js/common.js"></script>
+    <script>
+      const statusBox = document.getElementById('status');
+      const form = document.getElementById('loginForm');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        try {
+          const data = await apiFetch('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+          });
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showMessage(statusBox, 'Login successful. Redirecting...');
+          setTimeout(() => (window.location.href = '/frontend/index.html'), 800);
+        } catch (error) {
+          showMessage(statusBox, error.message, 'error');
+        }
+      });
+    </script>
+  </body>
+</html>
