@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FriendsMart - Products</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>FriendsMart</h1>
+      <div class="nav-links">
+        <span id="userName">Guest</span>
+        <a href="index.html">Products</a>
+        <a href="cart.html">Cart</a>
+        <a href="orders.html">Orders</a>
+        <a href="admin.html" id="adminLink" style="display: none">Admin</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <h2>All Products</h2>
+      <section id="productGrid" class="grid"></section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FriendsMart - Cart</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>FriendsMart</h1>
+      <div class="nav-links">
+        <a href="index.html">Products</a>
+        <a href="orders.html">Orders</a>
+      </div>
+    </nav>
+
+    <main class="container">
+      <h2>Your Cart</h2>
+      <div id="cartAlert"></div>
+      <section id="cartList" class="list"></section>
+      <h3>Total: <span id="cartTotal">₹0</span></h3>
+
+      <div class="form" style="margin-top: 12px">
+        <div class="form-group">
+          <label for="shippingAddress">Shipping Address</label>
+          <textarea id="shippingAddress" rows="3" placeholder="Enter your delivery address"></textarea>
+        </div>
+        <button class="btn" onclick="checkout()">Checkout</button>
+      </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/cart.js"></script>
+  </body>
+</html>
